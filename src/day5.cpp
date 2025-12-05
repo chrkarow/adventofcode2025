@@ -3,25 +3,45 @@
 #include <boost/algorithm/string.hpp>
 using namespace std;
 
+/**
+ * A range of ingredient IDs. Both bounds are inclusive.
+ */
 struct IngredientIdRange {
   unsigned long lower;
   unsigned long upper;
 
-  [[nodiscard]] bool contains(long n) const {
+  /**
+   * Checks if the given number is within this range (both bounds inclusive).
+   * @param n The number to check.
+   * @return \c true if the number is within this range, \c false otherwise.
+   */
+  [[nodiscard]] bool contains(const long n) const {
     return n >= lower && n <= upper;
   }
 
+  /**
+   * @return The size of this range (both bounds inclusive)
+   */
   [[nodiscard]] unsigned long size() const {
     return upper - lower + 1;
   }
 };
 
+/**
+ * Checks if the given idToCheck is in at least one of the freshRanges.
+ * @param freshRanges The ranges of ingredient IDs which are considered to be fresh
+ * @param idToCheck The id to check
+ * @return \c true if the given id is in at least one range, \c false otherwise.
+ */
 bool isFresh(const vector<IngredientIdRange>& freshRanges, const long& idToCheck) {
   return ranges::any_of(freshRanges, [idToCheck](const IngredientIdRange r) { return r.contains(idToCheck); });
 }
 
-/// Checks for bridged ranges in the given range vector and merges them to one
-void margeBridgedRanges(vector<IngredientIdRange>& rangeVector) {
+/**
+ * Merges bridged ingredient ID ranges in the given vector. The vector will be sorted
+ * @param rangeVector The vector to work on.
+ */
+void mergeBridgedRanges(vector<IngredientIdRange>& rangeVector) {
   ranges::sort(rangeVector, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
     return r1.upper > r2.upper;
   });
@@ -35,7 +55,12 @@ void margeBridgedRanges(vector<IngredientIdRange>& rangeVector) {
   }
 }
 
-vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange>& freshIngredients) {
+/**
+ * Recombines the given ranges so that the result only contains distinct ranges which are not overlapping.
+ * @param freshIngredients the ingredient range vector to recombine
+ * @return The recombined result.
+ */
+vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange> freshIngredients) {
   vector<IngredientIdRange> returnVector;
 
   ranges::sort(freshIngredients, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
@@ -57,7 +82,7 @@ vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange>& freshIngred
       if (it->lower < lower && it->upper >= lower && it->upper <= upper) {
         lower = it->lower;
         add = false;
-        margeBridgedRanges(returnVector);
+        mergeBridgedRanges(returnVector);
         break;
       }
 
@@ -65,7 +90,7 @@ vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange>& freshIngred
       if (it->lower >= lower && it->lower <= upper && it->upper > upper) {
         upper = it->upper;
         add = false;
-        margeBridgedRanges(returnVector);
+        mergeBridgedRanges(returnVector);
         break;
       }
     }
