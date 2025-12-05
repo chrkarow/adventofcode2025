@@ -92,7 +92,7 @@ void removeRec(
 }
 
 void day4() {
-  std::vector<string> grid;
+  vector<string> grid;
 
   ifstream infile("../data/day4.txt");
   for (string line; getline(infile, line);) {
