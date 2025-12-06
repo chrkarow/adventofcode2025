@@ -3,6 +3,7 @@
 #include "src/day3.cpp"
 #include "src/day4.cpp"
 #include "src/day5.cpp"
+#include "src/day6.cpp"
 
 int main() {
   day1();
@@ -10,4 +11,5 @@ int main() {
   day3();
   day4();
   day5();
+  day6();
 }
