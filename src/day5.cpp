@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-using namespace std;
 
+namespace day5 {
 /**
  * A range of ingredient IDs. Both bounds are inclusive.
  */
@@ -33,16 +33,16 @@ struct IngredientIdRange {
  * @param idToCheck The id to check
  * @return \c true if the given id is in at least one range, \c false otherwise.
  */
-bool isFresh(const vector<IngredientIdRange>& freshRanges, const long& idToCheck) {
-  return ranges::any_of(freshRanges, [idToCheck](const IngredientIdRange r) { return r.contains(idToCheck); });
+bool isFresh(const std::vector<IngredientIdRange>& freshRanges, const long& idToCheck) {
+  return std::ranges::any_of(freshRanges, [idToCheck](const IngredientIdRange r) { return r.contains(idToCheck); });
 }
 
 /**
  * Merges bridged ingredient ID ranges in the given vector. The vector will be sorted
  * @param rangeVector The vector to work on.
  */
-void mergeBridgedRanges(vector<IngredientIdRange>& rangeVector) {
-  ranges::sort(rangeVector, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
+void mergeBridgedRanges(std::vector<IngredientIdRange>& rangeVector) {
+  std::ranges::sort(rangeVector, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
     return r1.upper > r2.upper;
   });
 
@@ -60,10 +60,10 @@ void mergeBridgedRanges(vector<IngredientIdRange>& rangeVector) {
  * @param freshIngredients the ingredient range vector to recombine
  * @return The recombined result.
  */
-vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange> freshIngredients) {
-  vector<IngredientIdRange> returnVector;
+std::vector<IngredientIdRange> recombineRanges(std::vector<IngredientIdRange> freshIngredients) {
+  std::vector<IngredientIdRange> returnVector;
 
-  ranges::sort(freshIngredients, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
+  std::ranges::sort(freshIngredients, [](const IngredientIdRange& r1, const IngredientIdRange& r2) {
     return r1.size() > r2.size();
   });
 
@@ -103,22 +103,22 @@ vector<IngredientIdRange> recombineRanges(vector<IngredientIdRange> freshIngredi
 }
 
 
-void day5() {
-  vector<IngredientIdRange> freshIngredients;
+void run() {
+  std::vector<IngredientIdRange> freshIngredients;
 
   int part1Result = 0;
 
-  ifstream infile("../data/day5.txt");
+  std::ifstream infile("../data/day5.txt");
 
   bool readRanges = true;
-  for (string line; getline(infile, line);) {
+  for (std::string line; getline(infile, line);) {
     if (line.empty()) {
       readRanges = false;
       continue;
     }
 
     if (readRanges) {
-      vector<string> rawIdRange;
+      std::vector<std::string> rawIdRange;
       boost::split(rawIdRange, line, boost::is_any_of("-"), boost::token_compress_on);
       freshIngredients.push_back({stoul(rawIdRange.at(0)), stoul(rawIdRange.at(1))});
     } else {
@@ -127,14 +127,15 @@ void day5() {
   }
 
   constexpr unsigned long startValue = 0;
-  const unsigned long part2Result = ranges::fold_left(
+  const unsigned long part2Result = std::ranges::fold_left(
       recombineRanges(freshIngredients),
       startValue,
       [](const unsigned long acc, const IngredientIdRange r) {
         return acc + r.size();
       });
 
-  cout << "----------- DAY 5 -----------\n";
-  cout << "The solution for Part 1 is: " << part1Result << "\n";
-  cout << "The solution for Part 2 is: " << part2Result << "\n";
+  std::cout << "----------- DAY 5 -----------\n";
+  std::cout << "The solution for Part 1 is: " << part1Result << "\n";
+  std::cout << "The solution for Part 2 is: " << part2Result << "\n";
+}
 }

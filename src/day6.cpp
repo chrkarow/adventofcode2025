@@ -2,10 +2,10 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
 
-long part1(vector<string> problems) {
-  vector<vector<string>> splitBySpace;
+namespace day6 {
+long part1(std::vector<std::string> problems) {
+  std::vector<std::vector<std::string>> splitBySpace;
 
   // Lazy structuring of data strings...
   boost::trim(problems[0]);
@@ -14,7 +14,7 @@ long part1(vector<string> problems) {
   boost::trim(problems[3]);
   boost::trim(problems[4]);
 
-  vector<string> tokens;
+  std::vector<std::string> tokens;
   boost::split(tokens, problems[0], boost::is_any_of(" "), boost::token_compress_on);
   splitBySpace.push_back(tokens);
   boost::split(tokens, problems[1], boost::is_any_of(" "), boost::token_compress_on);
@@ -41,7 +41,9 @@ long part1(vector<string> problems) {
   return part1Result;
 }
 
-long part2(vector<string> problems) {
+long part2(std::vector<std::string> problems) {
+  using namespace std::string_literals;
+
   long result = 0;
 
   auto it0 = problems[0].rbegin() - 1;
@@ -50,18 +52,17 @@ long part2(vector<string> problems) {
   auto it3 = problems[3].rbegin() - 1;
   auto it4 = problems[4].rbegin() - 1;
 
-  vector<long> numbers;
+  std::vector<long> numbers;
   while (it0 != problems[0].rend()) {
-
     ++it0;
     ++it1;
     ++it2;
     ++it3;
     ++it4;
 
-    string s = ""s + *it0 + *it1 + *it2 + *it3;
+    std::string s = ""s + *it0 + *it1 + *it2 + *it3;
     boost::trim(s);
-    numbers.push_back(stol(s));
+    numbers.push_back(std::stol(s));
 
     if (*it4 != ' ') {
       long subResult = *it4 == '+' ? 0 : 1;
@@ -88,15 +89,16 @@ long part2(vector<string> problems) {
   return result;
 }
 
-void day6() {
-  ifstream infile("../data/day6.txt");
+void run() {
+  std::ifstream infile("../data/day6.txt");
 
-  vector<string> problems;
-  for (string line; getline(infile, line);) {
+  std::vector<std::string> problems;
+  for (std::string line; getline(infile, line);) {
     problems.push_back(line);
   }
 
-  cout << "----------- DAY 6 -----------\n";
-  cout << "The solution for Part 1 is: " << part1(problems) << "\n";
-  cout << "The solution for Part 2 is: " << part2(problems) << "\n";
+  std::cout << "----------- DAY 6 -----------\n";
+  std::cout << "The solution for Part 1 is: " << part1(problems) << "\n";
+  std::cout << "The solution for Part 2 is: " << part2(problems) << "\n";
+}
 }

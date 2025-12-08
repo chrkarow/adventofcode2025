@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-using namespace std;
 
+namespace day4 {
 struct Coordinates {
   int y;
   int x;
@@ -12,11 +12,11 @@ bool operator==(const Coordinates& c1, const Coordinates& c2) {
   return c1.y == c2.y && c1.x == c2.x;
 }
 
-bool contains(vector<Coordinates> coords, Coordinates c) {
-  return count(coords.begin(), coords.end(), c) > 0;
+bool contains(std::vector<Coordinates>& coords, const Coordinates& c) {
+  return std::count(coords.begin(), coords.end(), c) > 0;
 }
 
-bool isAccessible(const vector<string>& grid, const Coordinates coords) {
+bool isAccessible(const std::vector<std::string>& grid, const Coordinates coords) {
   int count = 0;
   if (coords.y - 1 >= 0) {
     if (coords.x - 1 >= 0 && grid[coords.y - 1][coords.x - 1] == '@') {
@@ -44,8 +44,8 @@ bool isAccessible(const vector<string>& grid, const Coordinates coords) {
 }
 
 void removeRec(
-    vector<string>& grid,
-    vector<Coordinates>& alreadyRemoved,
+    std::vector<std::string>& grid,
+    std::vector<Coordinates>& alreadyRemoved,
     const Coordinates coords
     ) {
   if (grid[coords.y][coords.x] != '@' || !isAccessible(grid, coords)) {
@@ -91,11 +91,11 @@ void removeRec(
   }
 }
 
-void day4() {
-  vector<string> grid;
+void run() {
+  std::vector<std::string> grid;
 
-  ifstream infile("../data/day4.txt");
-  for (string line; getline(infile, line);) {
+  std::ifstream infile("../data/day4.txt");
+  for (std::string line; getline(infile, line);) {
     grid.push_back(line);
   }
 
@@ -106,7 +106,7 @@ void day4() {
     }
   }
 
-  vector<Coordinates> removed = {};
+  std::vector<Coordinates> removed = {};
 
   for (int y = 0; y < grid.size(); y++) {
     for (int x = 0; x < grid[y].size(); x++) {
@@ -116,7 +116,8 @@ void day4() {
     }
   }
 
-  cout << "----------- DAY 4 -----------\n";
-  cout << "The solution for Part 1 is: " << part1Result << "\n";
-  cout << "The solution for Part 2 is: " << removed.size() << "\n";
+  std::cout << "----------- DAY 4 -----------\n";
+  std::cout << "The solution for Part 1 is: " << part1Result << "\n";
+  std::cout << "The solution for Part 2 is: " << removed.size() << "\n";
+}
 }
